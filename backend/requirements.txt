@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+pydantic[email]
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+python-multipart
+scikit-learn
+xgboost
+pandas
+numpy
+vaderSentiment
+joblib
+python-dotenv
+imbalanced-learn
