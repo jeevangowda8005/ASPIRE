@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://yhgnlpfravqenxdanpxx.supabase.co"
+    }
+  }
+}
