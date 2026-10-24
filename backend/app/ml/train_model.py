@@ -35,6 +35,7 @@ except ImportError:
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_PATH = os.path.join(BASE_DIR, "data", "StressLevelDataset.csv")
+ROOT_DATA_PATH = os.path.join(os.path.dirname(BASE_DIR), "StressLevelDataset.csv")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 os.makedirs(MODELS_DIR, exist_ok=True)
 
@@ -81,8 +82,9 @@ def _generate_synthetic_dataset(n=1500, seed=42) -> pd.DataFrame:
 
 
 def load_dataset():
-    if os.path.exists(DATA_PATH):
-        df = pd.read_csv(DATA_PATH)
+    data_path = DATA_PATH if os.path.exists(DATA_PATH) else ROOT_DATA_PATH
+    if os.path.exists(data_path):
+        df = pd.read_csv(data_path)
         missing = [c for c in FEATURE_COLUMNS + [TARGET_COLUMN] if c not in df.columns]
         if missing:
             print(f"[train_model] WARNING: CSV missing columns {missing}. Using synthetic fallback.")
