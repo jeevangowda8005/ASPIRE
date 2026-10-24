@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "ms-python.python",
+    "ms-python.ruff",
+    "charliermarsh.ruff",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "ms-vscode.vscode-github-actions",
+    "humao.rest-client",
+    "bradlc.vscode-tailwindcss",
+    "dsznajder.es7-react-js-snippets",
+    "PKief.material-icon-theme"
+  ]
+}

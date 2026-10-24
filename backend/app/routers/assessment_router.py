@@ -20,6 +20,7 @@ def submit_checkin(payload: schemas.CheckinCreate, db: Session = Depends(get_db)
     category = scoring_service.category_for_score(final_score)
     drivers = scoring_service.compute_top_drivers(payload, sentiment_compound)
     ai_summary = summary_service.generate_summary(payload, category, drivers)
+    recs = recommendation_service.generate_recommendations(payload)
     checkin = models.Checkin(
         user_id=current_user.id, sleep_hours=payload.sleep_hours, sleep_quality=payload.sleep_quality,
         workload_intensity=payload.workload_intensity, deadlines_count=payload.deadlines_count,
@@ -31,9 +32,7 @@ def submit_checkin(payload: schemas.CheckinCreate, db: Session = Depends(get_db)
         final_score=final_score, stress_category=category, top_drivers=drivers, ai_summary=ai_summary,
     )
     db.add(checkin)
-    db.commit()
-    db.refresh(checkin)
-    recs = recommendation_service.generate_recommendations(payload)
+    db.flush()
     rec_objects = []
     for r in recs:
         rec_obj = models.Recommendation(checkin_id=checkin.id, priority=r["priority"],
@@ -42,6 +41,7 @@ def submit_checkin(payload: schemas.CheckinCreate, db: Session = Depends(get_db)
         db.add(rec_obj)
         rec_objects.append(rec_obj)
     db.commit()
+    db.refresh(checkin)
     result = schemas.CheckinOut.model_validate(checkin)
     result.recommendations = [schemas.RecommendationOut.model_validate(r) for r in rec_objects]
     return result

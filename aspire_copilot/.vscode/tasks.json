@@ -1,0 +1,97 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Start Backend",
+      "type": "shell",
+      "command": "cd backend && source venv/bin/activate && uvicorn app.main:app --reload --port 8000",
+      "group": "build",
+      "presentation": {
+        "panel": "new",
+        "name": "Backend",
+        "reveal": "always"
+      },
+      "runOptions": { "runOn": "default" }
+    },
+    {
+      "label": "⚡ Start Frontend",
+      "type": "shell",
+      "command": "cd frontend && npm run dev",
+      "group": "build",
+      "presentation": {
+        "panel": "new",
+        "name": "Frontend",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🧠 Train ML Model",
+      "type": "shell",
+      "command": "cd backend && source venv/bin/activate && python -m app.ml.train_model",
+      "group": "build",
+      "presentation": {
+        "panel": "new",
+        "name": "ML Training",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🧪 Run Tests",
+      "type": "shell",
+      "command": "cd backend && source venv/bin/activate && pip install pytest httpx -q && pytest tests/ -v",
+      "group": "test",
+      "presentation": {
+        "panel": "new",
+        "name": "Tests",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "📦 Install All Dependencies",
+      "type": "shell",
+      "command": "cd backend && source venv/bin/activate && pip install -r requirements.txt && cd ../frontend && npm install",
+      "group": "build",
+      "presentation": {
+        "panel": "new",
+        "name": "Install",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🔁 Git Push to GitHub",
+      "type": "shell",
+      "command": "git add . && git commit -m '${input:commitMessage}' && git push origin main",
+      "group": "build",
+      "presentation": {
+        "panel": "shared",
+        "name": "Git",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🏥 Health Check (Backend)",
+      "type": "shell",
+      "command": "curl -s https://aspire-gkl3.onrender.com/api/health | python3 -m json.tool",
+      "group": "test",
+      "presentation": {
+        "panel": "shared",
+        "name": "Health Check",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🌐 Open Local Site",
+      "type": "shell",
+      "command": "open http://localhost:3000",
+      "group": "build",
+      "presentation": { "reveal": "silent" }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "commitMessage",
+      "type": "promptString",
+      "description": "Enter commit message (e.g. fix: correct CORS for Vercel)"
+    }
+  ]
+}

@@ -1,64 +1,56 @@
-<<<<<<< HEAD
-# ASPIRE
-academic stress prediction
-=======
 # ASPIRE — Academic Stress Prediction & Intervention Recommendation Engine
 
-## To run locally (every time)
-
-### Terminal 1 — Backend
-```bash
-cd backend
-source venv/Scripts/activate        # Windows Git Bash
-uvicorn app.main:app --reload --port 8000
-```
-
-### Terminal 2 — Frontend
-```bash
-cd frontend
-npm run dev
-```
-
-Open **http://localhost:3000** in your browser.
-
----
-
-## First-time setup (only once on a new machine)
+## Run locally
 
 ### Backend
+
 ```bash
 cd backend
 python -m venv venv
-source venv/Scripts/activate
+source venv/bin/activate
 pip install -r requirements.txt
 python -m app.ml.train_model
+uvicorn app.main:app --reload --port 8000
 ```
 
 ### Frontend
+
 ```bash
 cd frontend
 npm install
 cp .env.example .env
+npm run dev
 ```
 
----
+Open the Vite URL shown in the terminal (typically http://localhost:5173).
+
+## Tests
+
+```bash
+cd backend
+pip install pytest httpx
+pytest tests/ -v
+```
+
+The API tests use an isolated in-memory SQLite database and do not modify the local database.
 
 ## Tech stack
+
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Frontend | React (Vite) + Tailwind CSS |
-| Backend | FastAPI (Python) |
+| Backend | FastAPI |
 | Database | SQLite |
-| Auth | JWT + bcrypt |
-| ML | RandomForest + XGBoost soft-voting ensemble, SMOTE |
-| NLP | VADER Sentiment Analysis |
+| Authentication | JWT + bcrypt |
+| ML | RandomForest + XGBoost soft-voting ensemble |
+| NLP | VADER sentiment analysis |
 
-## Real Kaggle dataset
-Download **StressLevelDataset.csv** from:
-https://www.kaggle.com/datasets/rxnach/student-stress-factors-a-comprehensive-analysis
+## Training data
 
-Place it at `backend/data/StressLevelDataset.csv` then retrain:
+The training script uses synthetic data when the Kaggle dataset is unavailable. To train
+with the real dataset, place `StressLevelDataset.csv` in `backend/data/` and run:
+
 ```bash
+cd backend
 python -m app.ml.train_model
 ```
->>>>>>> 8416f55 (Initial commit)

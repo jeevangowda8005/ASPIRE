@@ -1,0 +1,79 @@
+# ASPIRE API Tests
+# Install REST Client extension in VS Code, then click "Send Request" above each call
+
+@local = http://localhost:8000
+@prod = https://aspire-gkl3.onrender.com
+@base = {{local}}
+
+# Change @base to {{prod}} to test the live deployment
+
+### Health check
+GET {{base}}/api/health
+
+### Root
+GET {{base}}/
+
+###
+# ── AUTH ─────────────────────────────────────────
+###
+
+### Register new user
+POST {{base}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jeevan H M",
+  "email": "jeevan@bmsit.in",
+  "password": "Test1234",
+  "university": "BMSIT&M"
+}
+
+### Login
+# @name login
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "jeevan@bmsit.in",
+  "password": "Test1234"
+}
+
+### Save token from login response
+@token = {{login.response.body.access_token}}
+
+### Get current user
+GET {{base}}/api/auth/me
+Authorization: Bearer {{token}}
+
+###
+# ── ASSESSMENT ───────────────────────────────────
+###
+
+### Submit check-in
+# @name checkin
+POST {{base}}/api/checkins
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sleep_hours": 7,
+  "sleep_quality": 6,
+  "workload_intensity": 7,
+  "deadlines_count": 3,
+  "academic_performance": 6,
+  "focus_ability": 5,
+  "mood": 6,
+  "anxiety_level": 7,
+  "self_esteem": 6,
+  "physical_activity_days": 2,
+  "social_support": 7,
+  "journal_text": "Had a rough week with assignments piling up, but feeling slightly better today."
+}
+
+### Get dashboard
+GET {{base}}/api/dashboard
+Authorization: Bearer {{token}}
+
+### Get history
+GET {{base}}/api/history
+Authorization: Bearer {{token}}

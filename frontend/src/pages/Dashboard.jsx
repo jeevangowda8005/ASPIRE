@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import Navbar from '../components/Navbar'
-import { Card, Badge, PriorityBadge, CategoryBadge, PrimaryButton } from '../components/UI'
+import { Card, Badge, PriorityBadge, CategoryBadge, PrimaryButton, GhostButton } from '../components/UI'
 import { useAuth } from '../context/AuthContext'
 import { assessmentApi } from '../lib/api'
 
@@ -13,15 +13,41 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const loadDashboard = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const { data: dashboard } = await assessmentApi.dashboard()
+      if (!dashboard || !Array.isArray(dashboard.history)) {
+        throw new Error('The dashboard response was incomplete.')
+      }
+      setData(dashboard)
+    } catch (err) {
+      const detail = err.response?.data?.detail
+      setError(
+        typeof detail === 'string'
+          ? detail
+          : err.message || 'Could not load your dashboard. Please try again.'
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    assessmentApi.dashboard()
-      .then((res) => setData(res.data))
-      .catch(() => setError('Could not load your dashboard. Please try refreshing.'))
-      .finally(() => setLoading(false))
+    loadDashboard()
   }, [])
 
   if (loading) return <div className="min-h-screen bg-cream"><Navbar /><div className="max-w-7xl mx-auto px-6 py-20 text-center text-ink/50">Loading your dashboard…</div></div>
-  if (error) return <div className="min-h-screen bg-cream"><Navbar /><div className="max-w-7xl mx-auto px-6 py-20 text-center text-red-600 font-semibold">{error}</div></div>
+  if (error) return (
+    <div className="min-h-screen bg-cream">
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-6 py-20 text-center" role="alert">
+        <p className="text-red-600 font-semibold mb-6">{error}</p>
+        <GhostButton onClick={loadDashboard}>Try again</GhostButton>
+      </div>
+    </div>
+  )
 
   if (!data?.latest) {
     return (

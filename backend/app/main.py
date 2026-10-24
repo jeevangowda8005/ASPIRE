@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app.routers import auth_router, assessment_router
@@ -11,7 +11,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000",
                    "https://aspire-gkl3.onrender.com",
-                   "https://aspire-two-theta.vercel.app/"],
+                   "https://aspire-two-theta.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,5 +30,5 @@ def health():
     try:
         source = scoring_service.get_data_source()
         return {"status": "ok", "ml_model": "loaded", "training_data_source": source}
-    except Exception as e:
-        return {"status": "ok", "ml_model": f"not loaded: {e}"}
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail="ML model is unavailable") from exc
