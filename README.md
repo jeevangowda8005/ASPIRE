@@ -22,7 +22,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open the Vite URL shown in the terminal (typically http://localhost:5173).
+Open the Vite URL shown in the terminal (typically http://localhost:3000).
 
 ## Tests
 
